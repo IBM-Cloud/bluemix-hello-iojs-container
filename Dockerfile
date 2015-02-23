@@ -1,33 +1,20 @@
-#-------------------------------------------------------------------------------
-# build:
-#   docker build -t  <userid>/hello-iojs .
-#
-# run locally:
-#   docker run -d -P <userid>/hello-iojs
-#   docker ps      # get port
-#   boot2docker ip # get ip address
-#   curl http:<ip-address>:port
-#
-# deploy on bluemix:
-#   docker tag <userid>/hello-iojs registry-ice.ng.bluemix.net/<userid>/hello-iojs
-#   ice --local push               registry-ice.ng.bluemix.net/<userid>/hello-iojs
-#   ice run --name hello-iojs      registry-ice.ng.bluemix.net/<userid>/hello-iojs
-#   ice ip request # get ip-address
-#   ice ip bind <ip-address> hello-iojs
-#   open http://<ip-address>/
-#   open http://hello-iojs.muellerware.org/ # with DNS A-record
-#-------------------------------------------------------------------------------
+# base image; see: https://registry.hub.docker.com/_/iojs/
+FROM iojs:1.2
 
-FROM iojs/iojs
-
+# we'll put our app contents in the /app directory
 RUN mkdir /app
 
-COPY package.json /app/package.json
-COPY server.js    /app/server.js
+# copy our app to the /app directory
+COPY . /app
 
+# we'll need to run npm install to install pre-reqs
 RUN cd /app; npm install
 
-EXPOSE   80
+# lets run this app on port 80
+EXPOSE 80
+
+# tell the app to run the app on port 80 also
 ENV PORT 80
 
-CMD iojs /app/server.js
+# run the app
+CMD iojs --harmony_arrow_functions --harmony_object_literals /app/server.js

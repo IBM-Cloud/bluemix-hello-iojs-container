@@ -1,10 +1,19 @@
 {
-  "name":      "bluemix-hello-iojs-container",
-  "engines": {
-    "iojs" : "*"
+  "name":            "bluemix-hello-iojs-container",
+  "description":     "sample hello world server for iojs to deploy in Docker",
+  "repository": {
+    "type":          "git",
+    "url" :          "https://github.com/IBM-Bluemix/bluemix-hello-iojs-container.git"
+  },
+  "scripts": {
+    "cake":          "cake",
+    "watch":         "cake watch"
   },
   "dependencies": {
-    "express": "4.9.x",
-    "ports":   "1.1.x"
+    "hapi":          "8.2.x"
+  },
+  "devDependencies": {
+    "cakex":         "0.1.x",
+    "coffee-script": "1.9.x"
   }
 }

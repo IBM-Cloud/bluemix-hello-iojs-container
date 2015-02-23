@@ -1,43 +1,31 @@
 // Licensed under the Apache License. See footer for details.
 
 "use strict"
+// use strict required for usage of `let`
 
-let pkg     = require("./package.json")
-let express = require("express")
-let ports   = require("ports")
+let Hapi = require("hapi")
 
-// create the express app
-let app = express()
+// get the port to use
+let port = process.env.PORT || "3000"
 
-let port = process.env.PORT || ports.getPort(pkg.name)
+// create the hapi server
+let server = new Hapi.Server()
 
-// have all GET requests handled by the onRequest function
-app.get("*", onRequest)
+// have it listen on the specified port
+server.connection({ port })
 
-// start the server, writing a message once it's actually started
-app.listen(port, function() {
-  log(`server starting on http://localhost:${port}`)
+// add a route for the main page
+server.route({
+  method: "GET",
+  path:   "/",
+  handler: (request, reply) =>
+    reply("Hello, world!")
 })
 
-// all done! server should start listening and responding to requests!
+// start the server
+server.start()
 
-//------------------------------------------------------------------------------
-// when a request is sent to the server, respond with "Hello World" text
-//------------------------------------------------------------------------------
-function onRequest(request, response) {
-  log(`request ${request.method} ${request.url}`)
-
-  let html = "<h1>Hello, world!</h1>"
-
-  response.send(html)
-}
-
-//------------------------------------------------------------------------------
-// log a message with a common prefix of the package name
-//------------------------------------------------------------------------------
-function log(message) {
-  console.log(`${pkg.name}: ${message}`)
-}
+console.log (`server started on port ${port}`)
 
 //------------------------------------------------------------------------------
 // Copyright 2014 Patrick Mueller
